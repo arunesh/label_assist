@@ -1,8 +1,10 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import rateLimit from 'express-rate-limit';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import healthRouter from './routes/health.js';
 import verifyRouter from './routes/verify.js';
 import recompareRouter from './routes/recompare.js';
@@ -37,19 +39,12 @@ app.use('/api', upload.single('image'), verifyRouter);
 app.use('/api', recompareRouter);
 app.use('/api', batchRouter);
 
-// ExpressJS for serving on same machine
-// Render:
-
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
+// Serve the React client build (for single-origin deployments like Render)
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Serve the React client build
 app.use(express.static(join(__dirname, '../../client/dist')));
 
 // All non-API routes fall through to the SPA
-app.get('*', (_req, res) => {
+app.get('*', (_req: Request, res: Response) => {
   res.sendFile(join(__dirname, '../../client/dist/index.html'));
 });
 
