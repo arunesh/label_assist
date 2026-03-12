@@ -37,6 +37,22 @@ app.use('/api', upload.single('image'), verifyRouter);
 app.use('/api', recompareRouter);
 app.use('/api', batchRouter);
 
+// ExpressJS for serving on same machine
+// Render:
+
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Serve the React client build
+app.use(express.static(join(__dirname, '../../client/dist')));
+
+// All non-API routes fall through to the SPA
+app.get('*', (_req, res) => {
+  res.sendFile(join(__dirname, '../../client/dist/index.html'));
+});
+
 // Error handler
 app.use(errorHandler);
 
