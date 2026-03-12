@@ -1,0 +1,102 @@
+{
+  "01_perfect_bourbon.png": {
+    "brandName": "OLD TOM DISTILLERY",
+    "classType": "Kentucky Straight Bourbon Whiskey",
+    "alcoholContent": "45% Alc./Vol. (90 Proof)",
+    "netContents": "750 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Old Tom Distillery Co.",
+    "producerAddress": "Louisville, KY 40202",
+    "countryOfOrigin": "Product of USA"
+  },
+  "02_case_diff_wine.png": {
+    "brandName": "Stone's Throw Vineyards",
+    "classType": "Pinot Noir",
+    "alcoholContent": "13.5% Alc./Vol.",
+    "netContents": "750 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Stones Throw Winery LLC",
+    "producerAddress": "Sonoma, CA 95476",
+    "countryOfOrigin": "United States"
+  },
+  "03_wrong_abv_beer.png": {
+    "brandName": "SUMMIT PEAK IPA",
+    "classType": "India Pale Ale",
+    "alcoholContent": "5.0% Alc./Vol.",
+    "netContents": "12 Fl. Oz.",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Summit Peak Brewing Company",
+    "producerAddress": "Portland, OR 97201",
+    "countryOfOrigin": "USA"
+  },
+  "04_titlecase_warning.png": {
+    "brandName": "COASTAL RESERVE",
+    "classType": "Chardonnay",
+    "alcoholContent": "14.1% Alc./Vol.",
+    "netContents": "750 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Coastal Reserve Winery Inc.",
+    "producerAddress": "Napa Valley, CA 94558",
+    "countryOfOrigin": "United States of America"
+  },
+  "05_missing_warning.png": {
+    "brandName": "HIGHLAND MIST",
+    "classType": "Single Malt Scotch Whisky",
+    "alcoholContent": "43% Alc./Vol.",
+    "netContents": "700 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Highland Mist Distillers Ltd.",
+    "producerAddress": "Speyside, Scotland",
+    "countryOfOrigin": "Product of Scotland"
+  },
+  "06_wrong_warning_word.png": {
+    "brandName": "RIVER BEND RYE",
+    "classType": "Straight Rye Whiskey",
+    "alcoholContent": "50% Alc./Vol. (100 Proof)",
+    "netContents": "750 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "River Bend Distilling Co.",
+    "producerAddress": "Nashville, TN 37203",
+    "countryOfOrigin": "USA"
+  },
+  "07_country_mismatch.png": {
+    "brandName": "SOL DORADO",
+    "classType": "Tequila Reposado",
+    "alcoholContent": "40% Alc./Vol. (80 Proof)",
+    "netContents": "750 mL",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Sol Dorado Spirits",
+    "producerAddress": "Jalisco, Mexico",
+    "countryOfOrigin": "USA"
+  },
+  "08_multiple_issues.png": {
+    "brandName": "VELVET CROWN",
+    "classType": "Blended Whiskey",
+    "alcoholContent": "38% Alc./Vol.",
+    "netContents": "1 L",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Velvet Crown Spirits Corp.",
+    "producerAddress": "Chicago, IL 60601",
+    "countryOfOrigin": "USA"
+  },
+  "09_fuzzy_match_vodka.png": {
+    "brandName": "CRYSTAL BROOK",
+    "classType": "Vodka",
+    "alcoholContent": "40% Alc./Vol. (80 Proof)",
+    "netContents": "1.75 L",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Crysta1 Brook Distillers",
+    "producerAddress": "Austin, TX 78701",
+    "countryOfOrigin": "USA"
+  },
+  "10_net_contents_unit.png": {
+    "brandName": "DARK HARBOR",
+    "classType": "Stout",
+    "alcoholContent": "6.2% Alc./Vol.",
+    "netContents": "12 FL OZ",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Dark Harbor Brewing",
+    "producerAddress": "San Diego, CA 92101",
+    "countryOfOrigin": "USA"
+  }
+}

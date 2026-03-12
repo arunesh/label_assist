@@ -1,0 +1,74 @@
+[
+  {
+    "filename": "01_perfect_bourbon.png",
+    "description": "Perfect label — all fields match exactly",
+    "expectedIssues": [
+      "NONE — all fields should pass"
+    ]
+  },
+  {
+    "filename": "02_case_diff_wine.png",
+    "description": "Case differences in brand name — should trigger warnings",
+    "expectedIssues": [
+      "brandName: case difference (warning)"
+    ]
+  },
+  {
+    "filename": "03_wrong_abv_beer.png",
+    "description": "ABV mismatch — label says 5.5% but correct is 5.0%",
+    "expectedIssues": [
+      "alcoholContent: 5.5% on label vs 5.0% in app (fail)"
+    ]
+  },
+  {
+    "filename": "04_titlecase_warning.png",
+    "description": "Government warning header in title case (should fail format check)",
+    "expectedIssues": [
+      "governmentWarning: title-case header instead of ALL CAPS (fail)"
+    ]
+  },
+  {
+    "filename": "05_missing_warning.png",
+    "description": "Government warning completely absent from label",
+    "expectedIssues": [
+      "governmentWarning: completely absent from label (fail)"
+    ]
+  },
+  {
+    "filename": "06_wrong_warning_word.png",
+    "description": "Government warning has \"people\" instead of \"women\" — word mismatch",
+    "expectedIssues": [
+      "governmentWarning: \"people\" instead of \"women\" (fail)"
+    ]
+  },
+  {
+    "filename": "07_country_mismatch.png",
+    "description": "Country says Mexico but application says USA",
+    "expectedIssues": [
+      "countryOfOrigin: Mexico on label vs USA in app (fail)"
+    ]
+  },
+  {
+    "filename": "08_multiple_issues.png",
+    "description": "Multiple problems — wrong ABV, title-case warning, trademark in brand",
+    "expectedIssues": [
+      "governmentWarning: title-case header instead of ALL CAPS (fail)",
+      "brandName: contains TM symbol (should strip)",
+      "governmentWarning: title-case header (fail)"
+    ]
+  },
+  {
+    "filename": "09_fuzzy_match_vodka.png",
+    "description": "Minor OCR-like typo in producer name — fuzzy match scenario",
+    "expectedIssues": [
+      "producerName: \"Crysta1\" with numeral 1 — fuzzy match test"
+    ]
+  },
+  {
+    "filename": "10_net_contents_unit.png",
+    "description": "Net contents use FL OZ vs mL — unit normalization test",
+    "expectedIssues": [
+      "netContents: \"FL OZ\" vs \"fl oz\" unit normalization"
+    ]
+  }
+]

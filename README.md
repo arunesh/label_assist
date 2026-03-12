@@ -147,34 +147,130 @@ app.use(cors({ origin: 'https://label-assist.vercel.app' }));
 
 ### Option B: Render (full stack)
 
-Deploy both client and server as a single Render web service.
+Deploy both client and server as a single Render web service. The Express server serves the API and the built React app from the same process.
 
-1. Add a `Procfile` to the project root:
-   ```
-   web: cd server && node dist/index.js
-   ```
+#### Step 1: Prepare the codebase
 
-2. Add a root-level build script in `package.json` (already present):
-   ```json
-   "build": "npm run build -w server && npm run build -w client"
-   ```
+Add static file serving to the server so it can serve the client build. Edit `server/src/index.ts` — add these lines **after** the API routes and **before** the error handler (`app.use(errorHandler)`):
 
-3. Configure the server to serve the client's static build. Add to `server/src/index.ts` before the error handler:
-   ```ts
-   import { fileURLToPath } from 'url';
-   import { dirname, join } from 'path';
+```ts
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-   const __dirname = dirname(fileURLToPath(import.meta.url));
-   app.use(express.static(join(__dirname, '../../client/dist')));
-   app.get('*', (_req, res) => {
-     res.sendFile(join(__dirname, '../../client/dist/index.html'));
-   });
-   ```
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-4. On Render:
-   - **Build command**: `npm install && npm run build`
-   - **Start command**: `cd server && node dist/index.js`
-   - Set environment variables in the Render dashboard.
+// Serve the React client build
+app.use(express.static(join(__dirname, '../../client/dist')));
+
+// All non-API routes fall through to the SPA
+app.get('*', (_req, res) => {
+  res.sendFile(join(__dirname, '../../client/dist/index.html'));
+});
+```
+
+The root `package.json` already has the correct build script:
+```json
+"build": "npm run build -w server && npm run build -w client"
+```
+
+#### Step 2: Push to GitHub
+
+Render deploys from a Git repo. Make sure your code is pushed:
+
+```bash
+git add -A
+git commit -m "prepare for Render deployment"
+git push origin main
+```
+
+#### Step 3: Create the Render web service
+
+1. Go to https://dashboard.render.com and click **New → Web Service**.
+
+2. Connect your GitHub account if you haven't already, then select the `label_assist` repository.
+
+3. Configure the service:
+
+   | Setting | Value |
+   |---------|-------|
+   | **Name** | `label-assist` (or whatever you prefer) |
+   | **Region** | Choose the region closest to your users |
+   | **Branch** | `main` |
+   | **Root Directory** | Leave blank (uses repo root) |
+   | **Runtime** | `Node` |
+   | **Build Command** | `npm install && npm run build` |
+   | **Start Command** | `cd server && node dist/index.js` |
+   | **Instance Type** | `Starter` ($7/mo) or `Free` (spins down after inactivity) |
+
+   > **Note on Free tier**: The free instance spins down after 15 minutes of inactivity. The first request after spin-down takes ~30 seconds to cold-start. For a demo or prototype this is fine. For regular use, choose Starter or higher.
+
+#### Step 4: Set environment variables
+
+In the Render dashboard, go to your service → **Environment** → **Add Environment Variable**:
+
+| Key | Value | Notes |
+|-----|-------|-------|
+| `ANTHROPIC_API_KEY` | `sk-ant-...` | Your Anthropic API key. Click "secret" to mask it. |
+| `PORT` | `10000` | Render expects port 10000 by default. The app reads `process.env.PORT`. |
+| `NODE_ENV` | `production` | Ensures Express runs in production mode. |
+| `MAX_FILE_SIZE_MB` | `10` | Max upload size per image. |
+| `AI_TIMEOUT_MS` | `8000` | Timeout for Claude API calls. |
+
+> **Important**: Render assigns `PORT` automatically on some plans. Setting it to `10000` is safest. The server reads `process.env.PORT` so it will bind correctly.
+
+#### Step 5: Deploy
+
+Click **Create Web Service**. Render will:
+
+1. Clone the repo
+2. Run `npm install` (installs all workspace dependencies)
+3. Run `npm run build` (compiles TypeScript server → `server/dist/`, builds React client → `client/dist/`)
+4. Start with `cd server && node dist/index.js`
+
+Watch the deploy logs in the Render dashboard. A successful deploy looks like:
+
+```
+==> Build successful
+==> Starting service with 'cd server && node dist/index.js'
+Server running on http://localhost:10000
+```
+
+#### Step 6: Verify the deployment
+
+Render assigns a URL like `https://label-assist.onrender.com`. Test it:
+
+```bash
+# Health check
+curl https://label-assist.onrender.com/api/health
+# → {"status":"ok","timestamp":"..."}
+
+# Open the app
+open https://label-assist.onrender.com
+```
+
+The React app loads at the root URL. All `/api/*` requests are handled by Express on the same origin — no CORS configuration needed.
+
+#### Auto-deploy
+
+By default, Render auto-deploys on every push to `main`. You can change this in **Settings → Build & Deploy → Auto-Deploy** if you prefer manual deploys.
+
+#### Custom domain (optional)
+
+1. Go to your service → **Settings → Custom Domains**.
+2. Add your domain (e.g., `labelassist.ttb.gov`).
+3. Render provides DNS instructions (CNAME record pointing to your `.onrender.com` URL).
+4. Render provisions a free TLS certificate automatically.
+
+#### Troubleshooting
+
+| Symptom | Likely Cause | Fix |
+|---------|-------------|-----|
+| Build fails at `npm install` | Node version mismatch | Set **Environment → NODE_VERSION** to `20` |
+| Build fails at `sharp` install | Missing native deps | Sharp ships prebuilt binaries for Linux — should work on Render. If not, add `npm install --include=optional` to build command |
+| App loads but API returns 502 | `ANTHROPIC_API_KEY` not set or invalid | Check **Environment** tab, ensure key is correct |
+| App loads but shows blank page | Static files not served | Verify the `express.static` and catch-all `app.get('*')` lines are in `index.ts` before the error handler |
+| Cold start takes 30+ seconds | Using Free tier | Upgrade to Starter ($7/mo) for always-on |
+| `POST /api/verify` times out | Large image + slow Claude response | Increase `AI_TIMEOUT_MS`, ensure image is under 10MB |
 
 ### Option C: Docker
 
