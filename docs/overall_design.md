@@ -131,7 +131,7 @@ Pure library code with unit tests. This is the algorithmic core.
 
 **`server/src/services/extractionService.ts`**
 - `extractFields(imageBuffer, mediaType)` → `ExtractedFields`
-- Base64 encode image, call `anthropic.messages.create()` with `claude-sonnet-4-20250514`, `max_tokens: 1024`, `temperature: 0`
+- Base64 encode image, call `anthropic.beta.messages.create()` with `claude-opus-5-5`, `max_tokens: 4096` (thinking is always on and counts toward this), `output_config: { effort: 'low', format: <JSON schema> }`, and `fallbacks: 'default'` for safety-classifier declines. No `temperature` (rejected by this model and API version)
 - Parse response as JSON, validate 8 expected fields
 - Retry once on parse failure, throw `AIExtractionError` on second failure
 - `AbortController` timeout at `AI_TIMEOUT_MS` (default 8000ms) → `AITimeoutError`

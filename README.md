@@ -2,11 +2,13 @@
 
 AI-powered alcohol label verification for TTB agents. Extracts text from label images using Claude vision, compares against application data, and presents field-by-field results for human review. The agent makes all final decisions — AI is advisory only.
 
+**Live app:** https://labelassist-ai.onrender.com
+
 ## Prerequisites
 
 - **Node.js** 20+
 - **npm** 10+
-- **Anthropic API key** with access to `claude-sonnet-4-20250514`
+- **Anthropic API key** with access to `claude-opus-5-5`
 
 ## Local Development
 
@@ -237,15 +239,15 @@ Server running on http://localhost:10000
 
 #### Step 6: Verify the deployment
 
-Render assigns a URL like `https://label-assist.onrender.com`. Test it:
+Render assigns a URL based on the service name (ours is `https://labelassist-ai.onrender.com`). Test it:
 
 ```bash
 # Health check
-curl https://label-assist.onrender.com/api/health
+curl https://labelassist-ai.onrender.com/api/health
 # → {"status":"ok","timestamp":"..."}
 
 # Open the app
-open https://label-assist.onrender.com
+open https://labelassist-ai.onrender.com
 ```
 
 The React app loads at the root URL. All `/api/*` requests are handled by Express on the same origin — no CORS configuration needed.

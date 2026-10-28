@@ -119,7 +119,7 @@ graph TB
 |-------|--------|-----------|
 | Frontend | React + Vite + Tailwind CSS | Fast dev cycle; Tailwind enables clean accessible UI without custom CSS overhead; React ecosystem is mature for form-heavy apps |
 | Backend | Node.js + Express | Lightweight, fast to prototype, good async I/O for proxying AI API calls; TypeScript for type safety |
-| AI/Vision | Anthropic Claude (claude-sonnet-4-20250514) via Messages API with vision | Strong vision + structured extraction in a single call; fast enough to hit the 5s target; the `image` content block handles label photos natively |
+| AI/Vision | Anthropic Claude Opus 5.5 (`claude-opus-5-5`) via Messages API with vision, low effort, structured outputs | Strong vision + structured extraction in a single call; originally built on `claude-sonnet-4-20250514`, which was retired June 15, 2026; fast enough to hit the 5s target; the `image` content block handles label photos natively |
 | Deployment | Vercel (frontend) + Railway or Render (backend) | Free/cheap tiers for prototype; HTTPS by default; easy CI/CD from GitHub |
 | Image handling | Sharp (Node.js) | Pre-process images (resize, normalize) before sending to the LLM to reduce latency and token cost |
 
@@ -387,7 +387,7 @@ Target: ≤ 5,000 ms end-to-end.
 | Step | Budget | Notes |
 |------|--------|-------|
 | Image upload & preprocessing | 300 ms | Resize on server, user's upload speed is external |
-| AI Vision API call | 3,500 ms | The dominant cost; Claude Sonnet with a single image typically responds in 2–4s |
+| AI Vision API call | 3,500 ms | The dominant cost; Claude Opus 5.5 at `low` effort with a single image (re-measure after model changes) |
 | Field comparison logic | 50 ms | Pure string operations, negligible |
 | Warning validation | 50 ms | Pure string operations |
 | Response serialization + network | 100 ms | |

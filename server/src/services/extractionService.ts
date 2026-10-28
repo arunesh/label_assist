@@ -6,7 +6,30 @@ import type { ExtractedFields } from '../types.js';
 
 const anthropic = new Anthropic();
 
+const MODEL = 'claude-opus-5-5';
 const AI_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS || '8000', 10);
+
+// Thinking is always on for this model and counts toward max_tokens, so leave
+// room for it on top of the ~500-token JSON reply.
+const MAX_TOKENS = 4096;
+
+// Structured outputs guarantee the reply is valid JSON in this exact shape.
+const fieldSchema = {
+  type: 'object',
+  properties: {
+    value: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+    confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
+  },
+  required: ['value', 'confidence'],
+  additionalProperties: false,
+};
+
+const EXTRACTION_SCHEMA = {
+  type: 'object',
+  properties: Object.fromEntries(FIELD_NAMES.map((f) => [f, fieldSchema])),
+  required: [...FIELD_NAMES],
+  additionalProperties: false,
+};
 
 export async function extractFields(
   imageBuffer: Buffer,
@@ -22,11 +45,18 @@ export async function extractFields(
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
 
-      const response = await anthropic.messages.create(
+      const response = await anthropic.beta.messages.create(
         {
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1024,
-          temperature: 0,
+          model: MODEL,
+          max_tokens: MAX_TOKENS,
+          // Low effort keeps thinking short so we stay near the 5-second target.
+          output_config: {
+            effort: 'low',
+            format: { type: 'json_schema', schema: EXTRACTION_SCHEMA },
+          },
+          // If a safety classifier declines, the API retries on a recommended model.
+          betas: ['server-side-fallback-2026-07-01'],
+          fallbacks: 'default',
           system: SYSTEM_PROMPT,
           messages: [
             {
@@ -45,6 +75,13 @@ export async function extractFields(
       );
 
       clearTimeout(timeout);
+
+      if (response.stop_reason === 'refusal') {
+        throw new Error('AI declined to process this image');
+      }
+      if (response.stop_reason === 'max_tokens') {
+        throw new Error('AI response was cut off');
+      }
 
       const textBlock = response.content.find((b) => b.type === 'text');
       if (!textBlock || textBlock.type !== 'text') {
