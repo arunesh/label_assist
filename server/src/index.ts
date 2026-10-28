@@ -35,7 +35,10 @@ app.use('/api/', limiter);
 
 // Routes
 app.use('/api', healthRouter);
-app.use('/api', upload.single('image'), verifyRouter);
+// Only /verify takes a single 'image' upload. Mounting this on all of /api
+// rejected the batch route's 'images' field with "Unexpected field".
+app.use('/api/verify', upload.single('image'));
+app.use('/api', verifyRouter);
 app.use('/api', recompareRouter);
 app.use('/api', batchRouter);
 
