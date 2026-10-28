@@ -70,5 +70,12 @@
     "expectedIssues": [
       "netContents: \"FL OZ\" vs \"fl oz\" unit normalization"
     ]
+  },
+  {
+    "filename": "11_stormchaser_allcaps_warning.jpg",
+    "description": "Real label photo: domestic wine with the whole warning in ALL CAPS and no country of origin",
+    "expectedIssues": [
+      "NONE: all-caps warning body is allowed (only the header must be caps); blank country of origin is fine for a domestic product"
+    ]
   }
 ]

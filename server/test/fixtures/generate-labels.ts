@@ -209,6 +209,37 @@ const labels: LabelData[] = [
   },
 ];
 
+// ── Real label photos (checked in, not generated) ───────────────────────────
+// These images live in images/ and are added to the manifest and expected
+// results alongside the generated labels.
+
+interface PhotoLabel {
+  filename: string;
+  description: string;
+  application: Record<string, string>;
+  expectedIssues: string[];
+}
+
+const photoLabels: PhotoLabel[] = [
+  {
+    filename: '11_stormchaser_allcaps_warning.jpg',
+    description: 'Real label photo: domestic wine with the whole warning in ALL CAPS and no country of origin',
+    application: {
+      brandName: 'LIGHTHOUSE',
+      classType: 'Chardonnay',
+      alcoholContent: 'ALC. 13.5% BY VOL.',
+      netContents: '750 ML',
+      governmentWarning: GOV_WARNING_CORRECT,
+      producerName: 'Lighthouse Vintners',
+      producerAddress: 'Kingston, NY',
+      countryOfOrigin: '', // domestic product: not required
+    },
+    expectedIssues: [
+      'NONE: all-caps warning body is allowed (only the header must be caps); blank country of origin is fine for a domestic product',
+    ],
+  },
+];
+
 // ── SVG template rendering ──────────────────────────────────────────────────
 
 function escapeXml(str: string): string {
@@ -410,16 +441,27 @@ async function main() {
     };
   }
 
+  for (const photo of photoLabels) {
+    manifest[photo.filename] = photo.application;
+  }
+
   const manifestPath = join(OUT_DIR, 'manifest.json');
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-  console.log(`\n  manifest.json — batch test manifest with ${labels.length} entries`);
+  console.log(`\n  manifest.json — batch test manifest with ${Object.keys(manifest).length} entries`);
 
   // Write a companion file documenting expected results
-  const expectedResults = labels.map((l) => ({
-    filename: l.filename,
-    description: l.description,
-    expectedIssues: getExpectedIssues(l),
-  }));
+  const expectedResults = [
+    ...labels.map((l) => ({
+      filename: l.filename,
+      description: l.description,
+      expectedIssues: getExpectedIssues(l),
+    })),
+    ...photoLabels.map(({ filename, description, expectedIssues }) => ({
+      filename,
+      description,
+      expectedIssues,
+    })),
+  ];
 
   const expectedPath = join(OUT_DIR, 'expected-results.json');
   writeFileSync(expectedPath, JSON.stringify(expectedResults, null, 2));

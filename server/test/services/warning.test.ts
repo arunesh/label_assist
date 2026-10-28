@@ -33,6 +33,32 @@ describe('validateGovernmentWarning', () => {
     expect(result.note).toContain('differs at word');
   });
 
+  it('all-caps body (e.g. "ACCORDING") → pass', () => {
+    const allCaps = GOVERNMENT_WARNING_TEXT.toUpperCase();
+    const result = validateGovernmentWarning(GOVERNMENT_WARNING_TEXT, allCaps);
+    expect(result.status).toBe('pass');
+  });
+
+  it('mixed-case body → pass', () => {
+    const mixed = GOVERNMENT_WARNING_TEXT.replace('According to the Surgeon General', 'according to the surgeon general');
+    const result = validateGovernmentWarning(GOVERNMENT_WARNING_TEXT, mixed);
+    expect(result.status).toBe('pass');
+  });
+
+  it('word change in all-caps body → fail', () => {
+    const changed = GOVERNMENT_WARNING_TEXT.toUpperCase().replace('WOMEN', 'PEOPLE');
+    const result = validateGovernmentWarning(GOVERNMENT_WARNING_TEXT, changed);
+    expect(result.status).toBe('fail');
+    expect(result.note).toContain('expected "women", found "PEOPLE"');
+  });
+
+  it('title-case header still fails even when body case is ignored', () => {
+    const wrongHeader = 'Government Warning:' + GOVERNMENT_WARNING_TEXT.toUpperCase().slice('GOVERNMENT WARNING:'.length);
+    const result = validateGovernmentWarning(GOVERNMENT_WARNING_TEXT, wrongHeader);
+    expect(result.status).toBe('fail');
+    expect(result.note).toContain('ALL CAPS');
+  });
+
   it('extra whitespace normalized → pass', () => {
     const extraSpaces = GOVERNMENT_WARNING_TEXT.replace('women should', 'women  should');
     const result = validateGovernmentWarning(GOVERNMENT_WARNING_TEXT, extraSpaces);

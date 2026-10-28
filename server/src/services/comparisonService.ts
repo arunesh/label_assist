@@ -18,6 +18,19 @@ export function compareField(
 ): FieldResult {
   // Null/empty extraction
   if (!extractedValue || extractedValue.trim().length === 0) {
+    // Optional fields (e.g. country of origin on a domestic product) that are
+    // blank in the application and absent from the label are consistent.
+    // The government warning is mandatory, so it never takes this path.
+    const appBlank = !applicationValue || applicationValue.trim().length === 0;
+    if (appBlank && field !== 'governmentWarning') {
+      return {
+        field,
+        status: 'pass',
+        applicationValue,
+        extractedValue,
+        note: 'Not in application and not on label',
+      };
+    }
     return {
       field,
       status: 'fail',

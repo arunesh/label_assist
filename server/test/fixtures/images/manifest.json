@@ -98,5 +98,15 @@
     "producerName": "Dark Harbor Brewing",
     "producerAddress": "San Diego, CA 92101",
     "countryOfOrigin": "USA"
+  },
+  "11_stormchaser_allcaps_warning.jpg": {
+    "brandName": "LIGHTHOUSE",
+    "classType": "Chardonnay",
+    "alcoholContent": "ALC. 13.5% BY VOL.",
+    "netContents": "750 ML",
+    "governmentWarning": "GOVERNMENT WARNING: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.",
+    "producerName": "Lighthouse Vintners",
+    "producerAddress": "Kingston, NY",
+    "countryOfOrigin": ""
   }
 }

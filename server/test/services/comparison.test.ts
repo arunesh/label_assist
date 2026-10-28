@@ -69,6 +69,21 @@ describe('compareField', () => {
     expect(result.status).toBe('fail');
     expect(result.note).toContain('not found');
   });
+
+  it('countryOfOrigin: blank in application and absent on label (domestic) → pass', () => {
+    const result = compareField('countryOfOrigin', '', null);
+    expect(result.status).toBe('pass');
+  });
+
+  it('countryOfOrigin: in application but absent on label → fail', () => {
+    const result = compareField('countryOfOrigin', 'Mexico', null);
+    expect(result.status).toBe('fail');
+  });
+
+  it('governmentWarning: absent on label still fails even if application is blank', () => {
+    const result = compareField('governmentWarning', '', null);
+    expect(result.status).toBe('fail');
+  });
 });
 
 describe('compareAllFields', () => {

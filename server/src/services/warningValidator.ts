@@ -42,9 +42,11 @@ export function validateGovernmentWarning(
     };
   }
 
-  // 3. Content check — verbatim comparison
+  // 3. Content check — word-for-word, ignoring case. 27 CFR 16.22 only
+  // requires capitals for the "GOVERNMENT WARNING" header (checked above);
+  // the rest may be printed in any case, and all-caps warnings are common.
   const referenceNormalized = normalizeString(GOVERNMENT_WARNING_TEXT);
-  if (normalized === referenceNormalized) {
+  if (normalized.toUpperCase() === referenceNormalized.toUpperCase()) {
     return {
       field,
       status: 'pass',
@@ -59,7 +61,7 @@ export function validateGovernmentWarning(
   const extWords = normalized.split(' ');
 
   for (let i = 0; i < Math.max(refWords.length, extWords.length); i++) {
-    if (refWords[i] !== extWords[i]) {
+    if (refWords[i]?.toUpperCase() !== extWords[i]?.toUpperCase()) {
       const position = i + 1;
       const expected = refWords[i] || '(end)';
       const found = extWords[i] || '(end)';
